@@ -1,17 +1,22 @@
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, watch } from 'vue';
 
 import Button from '@/shared/components/button/Button.vue';
 import type { LiveStream } from '@/features/livestream/types';
 import { useHLS } from '../composable';
+import { useAppFetch, staticDataServer } from '@/shared';
 
 type Props = { stream: LiveStream, channelId: string }
 const { stream, channelId } = defineProps<Props>()
 const isFollowing = false
+const paused = ref(false)
 const videoRef = ref<null | HTMLVideoElement>(null);
-const { hls } = useHLS(videoRef, 'http://localhost:8080/live/livestream.m3u8')
+const hls = useHLS(videoRef, 'http://localhost:8080/live/livestream.m3u8')
 
-function handleFollow() { console.log("implement me") }
+const { data: channel }
+    = useAppFetch<LiveStream>(`/channels/${channelId}`).get().json()
+
+function handleFollow() { console.log("TODO: implement me") }
 </script>
 
 <template>
@@ -20,9 +25,10 @@ function handleFollow() { console.log("implement me") }
       </div> -->
     <div class="flex-5/6 overflow-y-scroll hidden-scroll flex flex-col">
         <div class="bg-black aspect-video rounded-lg flex items-center justify-center relative">
-            <video ref="videoRef" controls style="width: 100%; height: auto;"></video>
-            <img :src="`http://localhost:8090/static/` + stream.thumbnail" alt="" class="w-full h-full">
-            <div class="text-center absolute">
+            <video v-if="hls && hls.started" ref="videoRef" controls style="width: 100%; height: auto;"></video>
+            <img v-else v-if=channel :src="staticDataServer + `/channel/${channel.background}`" alt=""
+                class="w-full h-full">
+            <div class="text-center absolute" v-if="paused">
                 <div class="w-16 h-16 bg-purple-600 rounded-full flex items-center justify-center mx-auto mb-4">
                     <div class="w-8 h-8 text-white" />
                 </div>
@@ -33,7 +39,7 @@ function handleFollow() { console.log("implement me") }
         <div class="bg-gray-900 border-gray-700 pl-8 pr-8 flex-1 pt-4">
             <div class="flex gap-x-4 mb-4">
                 <div class="">
-                    <img :src="`http://localhost:8090/static/` + stream.avatar" :alt="stream.username"
+                    <img :src="staticDataServer + `/${stream.avatar}`" :alt="stream.username"
                         class="w-12 h-12 rounded-full" />
                 </div>
                 <div class="flex justify-between w-full">
@@ -65,8 +71,8 @@ function handleFollow() { console.log("implement me") }
                 </div>
             </div>
 
-            <div v-if="stream.description" class="mt-4">
-                <p class="text-gray-300">{{ stream.description }}</p>
+            <div v-if="channel" class="mt-4">
+                <p class="text-gray-300">{{ channel.description }}</p>
             </div>
         </div>
     </div>

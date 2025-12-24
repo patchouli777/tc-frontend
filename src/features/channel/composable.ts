@@ -30,5 +30,5 @@ export function useHLS(videoRef: Ref<HTMLVideoElement | null>, url: string) {
     if (hls.value) hls.value.destroy()
   })
 
-  return { hls }
+  return hls
 }

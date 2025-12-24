@@ -39,7 +39,7 @@ const { data, send, status, close } = useWebSocket("ws://localhost:80/ws", {
         retryTimer = 3
         retriesDone += 1
         const interval = setInterval(() => {
-            error.value = `Не удалось подключиться к чату. Попытка переподключиться через: ${retryTimer}`
+            error.value = `Unable to connect to chat. Retry in: ${retryTimer}`
             retryTimer -= 1
 
             if (retryTimer === 0) {
@@ -51,7 +51,7 @@ const { data, send, status, close } = useWebSocket("ws://localhost:80/ws", {
         delay: retryTimer * 1000,
         retries: retries,
         onFailed() {
-            error.value = `Не удалось подключиться к чату после ${retriesDone} попыток.`
+            error.value = `Failed to connect to chat after ${retriesDone} attempts.`
         }
     },
 })
@@ -81,7 +81,7 @@ function onKeyDown(e: KeyboardEvent) {
                 <div v-for="msg in messages" :key="msg.message + msg.sender" class="max-w-full">
                     <span class="font-semibold text-purple-400 mr-1">{{ msg.sender }}:</span>
                     <span class="text-gray-300 text-wrap max-w-full wrap-anywhere">{{ msg.message
-                        }}</span>
+                    }}</span>
                 </div>
             </div>
         </div>

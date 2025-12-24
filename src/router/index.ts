@@ -4,6 +4,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 import DirectoryView from '@/views/DirectoryView.vue'
 import ChannelView from '@/views/ChannelView.vue'
 import CategoryView from '@/views/CategoryView.vue'
+import ProfileView from '@/features/profile/view.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -27,6 +28,11 @@ const router = createRouter({
       path: '/:username',
       name: 'channel',
       component: ChannelView,
+    },
+    {
+      path: '/profile',
+      name: 'profile',
+      component: ProfileView,
     },
   ],
 })

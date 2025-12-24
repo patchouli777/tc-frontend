@@ -20,6 +20,7 @@ export const setToken = (token: string) => {
   const claims = parseJWT(authState.token!)
   authState.user = claims.username
   localStorage.setItem('loggedIn', 'true')
+  localStorage.setItem('accessToken', token)
 }
 
 export const clearUser = () => {
@@ -27,6 +28,6 @@ export const clearUser = () => {
   authState.isAuthenticated = false
   authState.token = null
   localStorage.removeItem('loggedIn')
-
+  localStorage.removeItem('accessToken')
   // deleteCookie('refreshToken')
 }

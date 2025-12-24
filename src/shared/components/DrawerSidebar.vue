@@ -29,6 +29,10 @@ watch(data, (d) => {
     console.log(d)
 })
 
+if (username.value !== null) {
+    execute()
+}
+
 watch(username, () => {
     if (username.value !== null) {
         execute()

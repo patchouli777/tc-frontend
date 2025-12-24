@@ -6,9 +6,17 @@ import { setToken } from '@/features/auth/store'
 import { useAppAuthFetch } from '@/shared/lib/utils'
 import './global.css'
 
-const includeCredentials: RequestCredentials = localStorage.getItem('loggedIn') ? 'include' : 'omit'
+const loggedIn = localStorage.getItem('loggedIn')
 
-if (includeCredentials === 'include') {
+if (loggedIn) {
+  const access = localStorage.getItem('accessToken')!
+  setToken(access)
+}
+
+const includeCredentials: RequestCredentials = loggedIn ? 'include' : 'omit'
+
+// if (loggedIn && includeCredentials === 'include') {
+if (false) {
   const { onFetchResponse, data, onFetchError } = useAppAuthFetch(
     '/auth/v1/refresh',
     { credentials: includeCredentials },
